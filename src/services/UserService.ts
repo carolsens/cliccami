@@ -9,5 +9,9 @@ export default class UserService {
     return ApiService.get<any>('user');
   }
 
+  static async forgot(email: string): Promise<any> {
+    return ApiService.post<any>('user/forgot', {email});
+  }
+
 
 }

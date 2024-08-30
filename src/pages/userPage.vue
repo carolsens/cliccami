@@ -54,11 +54,6 @@
 
 <script lang="ts">
 import {computed, ref, defineComponent} from 'vue';
-import PageService from "@/services/PageService";
-import DialogMidea from "@/components/DialogMidea.vue";
-import MideaPageService from "@/services/MideaPageService";
-import MideaService from "@/services/MideaService";
-import ContentService from "@/services/ContentService";
 import UserService from "@/services/UserService";
 
 export default defineComponent({
@@ -83,7 +78,7 @@ export default defineComponent({
     };
 
     const toggleActive = async (item: any) => {
-      const response = await UserService.updateStatus(item.id, item.activeBoolean);
+      await UserService.updateStatus(item.id, item.activeBoolean);
 
 
       item.active = item.activeBoolean ? 1 : 0;
@@ -112,11 +107,17 @@ export default defineComponent({
 
 
     const itemsPerPage = 25
-    const headers = ref([
+    const headers: {
+      title: string;
+      sortable?: boolean;
+      key: string;
+      width?: string;
+      align?: 'start' | 'center' | 'end';
+    }[] = [
       {title: 'Nome', align: 'start', sortable: false, key: 'name', width: '10%'},
       {title: 'E-mail', key: 'email', width: '25%'},
       {title: 'Ativo?', key: 'active', width: '30%'},
-    ])
+    ]
     const page = ref(1);
     const pageCount = computed(() => Math.ceil(userList.value.length / itemsPerPage));
 

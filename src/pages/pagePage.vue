@@ -118,7 +118,7 @@
           <v-btn
             icon="mdi-close"
             variant="text"
-            @click="pageView = false"
+            @click="mideaView = false"
           ></v-btn>
         </v-card-title>
 
@@ -162,7 +162,6 @@ import PageService from "@/services/PageService";
 import DialogMidea from "@/components/DialogMidea.vue";
 import MideaPageService from "@/services/MideaPageService";
 import MideaService from "@/services/MideaService";
-import ContentService from "@/services/ContentService";
 
 export default defineComponent({
   props: {
@@ -213,12 +212,18 @@ export default defineComponent({
 
 
     const itemsPerPage = 25
-    const headers = ref([
+    const headers: {
+      title: string;
+      sortable?: boolean;
+      key: string;
+      width?: string;
+      align?: 'start' | 'center' | 'end';
+    }[] = [
       {title: 'Tipo', align: 'start', sortable: false, key: 'type', width: '10%'},
       {title: 'Página', key: 'page', width: '25%'},
       {title: 'URL', key: 'url', width: '30%'},
       {title: 'Vídeos', key: 'midea', width: '45%'},
-    ])
+    ]
     const page = ref(1);
     const pageCount = computed(() => Math.ceil(pageList.value.length / itemsPerPage));
 
@@ -256,7 +261,7 @@ export default defineComponent({
 
             await findData()
 
-            show.value = false;  // Fecha o diálogo após o sucesso
+            mideaView.value = false;  // Fecha o diálogo após o sucesso
           } catch (error) {
             console.error('Erro ao enviar vídeo:', error);
           }

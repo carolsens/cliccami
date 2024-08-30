@@ -26,15 +26,14 @@
                             class="mt-5"
                             :rules="[rules.required]"
                             @click:append-inner="visible = !visible"></v-text-field>
-              <v-row align="center" justify="center" class="mx-2 mt-1">
+<!--              <v-row align="center" justify="center" class="mx-2 mt-1">-->
 
-                <a
-                  class="text-caption text-decoration-none mt-2 text-primary"
-                  href="#"
-                  rel="noopener noreferrer"
-                >
-                  Esqueceu sua senha?</a>
-              </v-row>
+<!--                <v-btn flat-->
+<!--                  class="text-caption  text-primary"-->
+<!--                  @click="forgotView = true"-->
+<!--                >-->
+<!--                  Esqueceu sua senha?</v-btn>-->
+<!--              </v-row>-->
               <div class="text-center">
                 <v-btn  color="background" class="mr-4 mt-10" @click="accountFormView = true">Cadastro</v-btn>
                 <v-btn type="submit" color="primary" class="mr-4 mt-10" >Entrar</v-btn>
@@ -66,6 +65,38 @@
       </v-btn>
     </template>
   </v-snackbar>
+  <v-dialog v-model="forgotView" max-width="500px">
+    <v-card>
+      <v-card-title class="d-flex justify-space-between align-center">
+        <div class="text-h5 text-medium-emphasis">
+          Recuperar senha
+        </div>
+        <v-btn
+          icon="mdi-close"
+          variant="text"
+          @click="forgotView = false"
+        ></v-btn>
+      </v-card-title>
+
+      <v-card-text class="pb-5">
+        <v-text-field
+          variant="outlined"
+          v-model="emailForgot"
+          label="E-mail"
+        >
+        </v-text-field>
+      </v-card-text>
+      <v-card-actions class="d-flex justify-end">
+        <v-btn
+          color="primary"
+          variant="elevated"
+          @click="forgot()"
+        >
+          Enviar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -73,6 +104,7 @@ import { ref, defineComponent } from 'vue';
 import DialogAccountForm from "@/components/DialogAccountForm.vue";
 import {useRouter} from "vue-router";
 import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 
 export default defineComponent({
   name: 'LoginPage',
@@ -80,9 +112,11 @@ export default defineComponent({
   setup() {
 
     const email = ref('');
+    const emailForgot = ref('');
     const password = ref('');
     const visible = ref(false);
     const accountFormView = ref(false);
+    const forgotView = ref(false);
     const snackbar = ref(false);
     const textSnackbar = ref('');
     const timeoutSnackbar = ref(3000);
@@ -125,6 +159,22 @@ export default defineComponent({
     };
 
 
+    const forgot = async () => {
+      try {
+        loadingView.value = true
+        await UserService.forgot(emailForgot.value);
+
+        loadingView.value = false
+      } catch (error) {
+        loadingView.value = false
+        textSnackbar.value = 'Não foi possível recuperar senha';
+
+        colorSnackbar.value = '#B00020'
+        snackbar.value = true
+        console.log('error')
+      }
+    };
+
 
     return {
       email,
@@ -138,7 +188,10 @@ export default defineComponent({
       snackbar,
       textSnackbar,
       colorSnackbar,
-      timeoutSnackbar
+      timeoutSnackbar,
+      forgotView,
+      emailForgot,
+      forgot
     }
 
   }
