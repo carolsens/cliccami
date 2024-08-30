@@ -85,8 +85,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, watch} from 'vue';
-import axios from 'axios';
+import {computed, defineComponent, ref} from 'vue';
 import ContentService from "@/services/ContentService";
 
 export default defineComponent({

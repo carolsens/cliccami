@@ -79,9 +79,7 @@ export default defineComponent({
   components: {  },
   setup() {
 
-    const email = ref('');
-    const password = ref('');
-    const visible = ref(false);
+
     const snackbar = ref(false);
     const textSnackbar = ref('');
     const timeoutSnackbar = ref(3000);
